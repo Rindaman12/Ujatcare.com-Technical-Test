@@ -22,6 +22,8 @@
 
             <q-tabs align="left">
                 <q-route-tab to="/home" label="Home" replace />
+                <q-route-tab to="/add" label="Add Image" replace />
+
                
             </q-tabs>
 

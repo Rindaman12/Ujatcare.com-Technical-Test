@@ -1,34 +1,87 @@
 <template>
-    <div class="welcome-image">
-        <div class="q-pa-md row items-start q-gutter-md">
-            <q-card class="my-card">
-                
+    <div class="q-pa-md row items-start q-gutter-md">
+        <q-card class="my-card">
+            <q-card-section class="header text-white">
+                <div class="text-h6" color="white">Add Image</div>
+            </q-card-section>
+            <div v-for="image in images" :key="image.created_at">
+                <div class="q-pa-md row items-start q-gutter-md">
+                    <q-card class="image-card">
+                        <img src="https://cdn.quasar.dev/img/mountains.jpg" />
 
-                <q-card-section class="message">
-                    Welcome
-                </q-card-section>
-            </q-card>
-        </div>
+                        <q-card-section>
+                            <div class="text-h6">Image Description:</div>
+                            <div class="text-subtitle2">
+                                {{ image.description }}
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                </div>
+            </div>
+        </q-card>
     </div>
 </template>
 
-<style scoped>
-.message {
-    font-size: large;
-    font-weight: bold;
-}
+<script>
+import Csfr from "./Csrf";
+import Swal from "sweetalert2";
 
-.my-card {
-    width: 100%;
-    max-width: 450px;
-    margin: auto;
-    margin-top: 4%;
-    align-self: center;
-    justify-self: center;
-    display: flex;
-    flex-direction: column;
-    border-radius: 15px;
-    overflow: hidden;
-}
+export default {
+    components: {
+        inputCsfr: Csfr,
+    },
+
+    data() {
+        return {
+            errors: [],
+            images: "",
+        };
+    },
+    created() {
+        // Simple GET request using axios
+        this.getImages();
+    },
+    methods: {
+        showAlert(type, title, message) {
+            Swal.fire({
+                icon: type,
+                title: title,
+                text: message,
+            });
+        },
+
+        getImages: function () {
+            axios
+                .get("/api/images")
+                .then((response) => {
+                    setTimeout(() => {
+                        this.images = response.data.images;
+                    }, 1000);
+                })
+
+                .catch((err) => {
+                    if (error.response && error.response.status === 401) {
+                        location.reload();
+                    }
+
+                    console.log(err.response);
+                    this.showAlert(
+                        "error",
+                        "List Couldn't be Loaded.",
+                        ...Object.values(err.response.data)[0]
+                    );
+                });
+        },
+
+        exit() {
+            this.errors = [];
+        },
+    },
+};
+</script>
+
+<style lang="sass" scoped>
+.image-card
+  width: 100%
+  max-width: 250px
 </style>
-

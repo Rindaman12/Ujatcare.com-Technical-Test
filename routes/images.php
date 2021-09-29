@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ImageController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,23 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/offline', function () {
-    return view('vendor/laravelpwa/offline');
-});
 
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::get(
-        '/home',
-        function () {
-            return view('app.home');
-        }
-    );
-
-    Route::get(
-        '/add',
-        function () {
-            return view('app.home');
-        }
-    );
+Route::group(['prefix' => '/api','middleware' => 'auth'], function () {
+    Route::resource('images', ImageController::class);
 });

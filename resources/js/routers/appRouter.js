@@ -15,6 +15,13 @@ const routes = [
         props: true
     },
 
+    {
+        path: '/add',
+        name: 'addImage',
+        component: () => import('../components/app/Add.vue'),
+        props: true
+    },
+
   
     
 ]
