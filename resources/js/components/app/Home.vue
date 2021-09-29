@@ -4,23 +4,47 @@
             <q-card-section class="header text-white">
                 <div class="text-h6" color="white">List Images</div>
             </q-card-section>
-            <div v-for="image in images" :key="image.created_at">
-                <q-separator inset />
 
-                <div class="q-pa-md row items-start q-gutter-md">
-                    <q-card class="image-card">
-                        <img class="img-responsive"  :src="'../images/uploads/'+ image.image" />
+            <q-markup-table>
+                <thead>
+                    <q-tr>
+                        <th>Images</th>
+                        <th>Description</th>
+                        <th>Resolution</th>
+                        <th @click="sort('created_at')">Created At</th>
+                    </q-tr>
+                </thead>
+                <tbody>
+                    <q-tr v-for="image in sortedImages">
+                        <td>
+                            <img
+                                class="img-responsive"
+                                :src="'../images/uploads/' + image.image"
+                            />
+                        </td>
 
-                        <q-card-section>
-                            <div class="text-h6">Image Description:</div>
-                            <div class="text-subtitle2">
+                        <td>
+                            <q-badge color="green">
                                 {{ image.description }}
-                            </div>
-                        </q-card-section>
-                    </q-card>
-                </div>
-                <q-separator inset />
-            </div>
+                            </q-badge>
+                        </td>
+                        <td>
+                            <q-badge color="purple">
+                                {{ image.resolution }}
+                            </q-badge>
+                        </td>
+                        <td>
+                            <q-badge color="primary">
+                                {{image.created_at }}
+                            </q-badge>
+                        </td>
+                    </q-tr>
+                </tbody>
+            </q-markup-table>
+            <p>
+  <button @click="prevPage">Previous</button> 
+  <button @click="nextPage">Next</button>
+  </p>
         </q-card>
     </div>
 </template>
@@ -37,13 +61,32 @@ export default {
     data() {
         return {
             errors: [],
-            images: "",
+            images: [],
+            currentSort:'created_at',
+    currentSortDir:'desc',
+    pageSize:5,
+    currentPage:1
         };
     },
     created() {
         // Simple GET request using axios
         this.getImages();
     },
+    computed:{
+    sortedImages:function() {
+      return this.images.sort((a,b) => {
+        let modifier = 1;
+        if(this.currentSortDir === 'desc') modifier = -1;
+        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+        return 0;
+      }).filter((row, index) => {
+        let start = (this.currentPage-1)*this.pageSize;
+        let end = this.currentPage*this.pageSize;
+        if(index >= start && index < end) return true;
+      });
+    }
+  },
     methods: {
         showAlert(type, title, message) {
             Swal.fire({
@@ -52,6 +95,21 @@ export default {
                 text: message,
             });
         },
+
+    sort:function(s) {
+      //if s == current sort, reverse
+      if(s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+      }
+      this.currentSort = s;
+    },
+    nextPage:function() {
+      if((this.currentPage*this.pageSize) < this.images.length) this.currentPage++;
+    },
+    prevPage:function() {
+      if(this.currentPage > 1) this.currentPage--;
+    },
+
 
         getImages: function () {
             axios
@@ -83,9 +141,10 @@ export default {
 </script>
 
 <style scoped>
-.image-card {
+.img-responsive{
     width: 100%;
-    max-width: 250px;
+    max-width: 200px;
+    max-height: 200px;
     margin: auto;
     margin-top: 4%;
     margin-bottom: 4%;
@@ -97,17 +156,5 @@ export default {
     overflow: hidden;
 }
 
-.my-card {
-    width: 100%;
-    max-width: 600px;
-    margin: auto;
-    margin-top: 4%;
-    margin-bottom: 4%;
-    align-self: center;
-    justify-self: center;
-    display: flex;
-    flex-direction: column;
-    border-radius: 15px;
-    overflow: hidden;
-}
+
 </style>
