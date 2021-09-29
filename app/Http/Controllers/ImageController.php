@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use File;
+use Intervention\Image\ImageManagerStatic as ImageIn;
+use Illuminate\Support\Facades\Validator;
 
 class ImageController extends Controller
 {
@@ -43,41 +44,24 @@ class ImageController extends Controller
         //The images is created
 
         $request->validate([
-    'description' => 'string|max:40',
-    'resolution' => 'string|max:12',
-    'image' => 'required|mimes:jpg,jpeg,png|max:2048',
-]);
-
-        $user = Auth::user();
-
-        //If the user has less than 12 images, He can add a new one
-
-        if (count($user->images) < 12) {
-            $directory = str_replace("\\", "/", public_path())."/images/uploads/$user->user-uploads";
-    
-            //if the directory is not create, we proceed to generate it
-            if (!File::exists($directory)) {
-                File::makeDirectory($directory);
-            }
-
-            $image = $request->file('image');
-
-            $file_name = time() . '.' . $image->getClientOriginalExtension();
-            $img = Image::make($image);
-            $img->save("$directory/$file_name");
-
-            
-
-            $image = image::create([
-                'user_id' => Auth::id(),
-                'description' => $request->description,
-                'resolution' => $request->resolution,
-                'image' => $file_name,
-           
+            'description' => 'string|max:50',
+            'resolution' => 'string|max:12',
+            'image' => 'required|mimes:jpg,jpeg,png|max:2048',
         ]);
-            
-            return $image;
-        }
+
+        $image = $request->file('image');
+        $filename = time() . '.' . $image->getClientOriginalExtension();
+
+        //if aqui
+
+        ImageIn::make($image)->resize(300, 300)->save(public_path('images/uploads/' . $filename));
+        
+        $image = Image::create([
+            'user_id' => Auth::id(),
+            'description' => $request->description,
+            'resolution' => $request->resolution,
+            'image' => $filename,
+        ]);
     }
 
     /**
