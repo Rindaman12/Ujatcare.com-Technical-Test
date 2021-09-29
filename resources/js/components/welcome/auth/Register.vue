@@ -41,6 +41,24 @@
             />
           </q-card-section>
 
+            <q-separator inset />
+
+          <q-card-section>
+            <q-input
+              filled
+              v-model="password_confirmation"
+              type="password"
+              name="password_confirmation"
+              label="Password Confirmation"
+              hint="Please confirm your password."
+              lazy-rules
+              bottom-slots
+              :rules="[
+                (val) => (val && val.length > 0) || 'Please type something.',
+              ]"
+            />
+          </q-card-section>
+
             <!-- 
           <q-separator inset />
 
@@ -98,20 +116,22 @@ export default {
     return {
       showRecaptcha: true,
       disable: false,
-      user: [],
     };
   },
   setup() {
     const username = ref(null);
     const password = ref(null);
+    const password_confirmation = ref(null); 
 
     return {
       username,
       password,
+      password_confirmation,
 
       onReset() {
         username.value = null;
         password.value = null;
+        password_confirmation.value = null;
       },
     };
   },
@@ -130,7 +150,7 @@ export default {
       axios
         .post("/register", data)
         .then((res) => {
-          this.showAlert("success", "Register Succesful", "");
+          this.showAlert("success", "Register Succesfull", "");
           location.href = "/home";
         })
         .catch((err) => {
