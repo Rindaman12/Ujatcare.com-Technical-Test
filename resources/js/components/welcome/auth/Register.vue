@@ -1,4 +1,6 @@
 <template>
+  <!-- Similar functionality to Add.vue, please see that file for the full explanation -->
+
   <div class="welcome-image">
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card text-white">

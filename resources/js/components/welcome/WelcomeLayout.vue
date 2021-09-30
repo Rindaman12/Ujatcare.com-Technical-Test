@@ -1,4 +1,6 @@
 <template>
+  <!-- Similar functionality to AppLayout.vue, please see that file for the full explanation -->
+
     <q-layout view="hHh lpR fFf">
         <q-header
             reveal

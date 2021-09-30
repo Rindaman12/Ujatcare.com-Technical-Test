@@ -17,20 +17,14 @@ class ImageController extends Controller
      */
     public function index()
     {
+        //We retrieve all the images entries that are in the DB
+
         $images = Image::get();
+
+        //We pass all the data in json format to use it with Vue
 
         return response()
             ->json(['images' => $images]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -41,7 +35,7 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        //The images is created
+        //We create the validation for the request
 
         $request->validate([
             'description' => 'string|max:50',
@@ -49,10 +43,13 @@ class ImageController extends Controller
             'image' => 'required|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        //We assign image variable
+
         $image = $request->file('image');
         $filename = time() . '.' . $image->getClientOriginalExtension();
 
-
+        //Depending of the resolution choice of the user, we proceed to resize the image according to that choice
+        //And then we save the resize image to our images folder.
         if ($request->resolution === "200x200") {
             ImageIn::make($image)->resize(200, 200)->save(public_path('images/uploads/' . $filename));
         } elseif ($request->resolution === "300x300") {
@@ -61,57 +58,13 @@ class ImageController extends Controller
             ImageIn::make($image)->resize(400, 400)->save(public_path('images/uploads/' . $filename));
         }
 
-        
+        //Finally we create the instance of Image where we assign all the compiled data
+
         $image = Image::create([
             'user_id' => Auth::id(),
             'description' => $request->description,
             'resolution' => $request->resolution,
             'image' => $filename,
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Image $image)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Image $image)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Image $image)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Image $image)
-    {
-        //
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
+    //We create a seeder for the user with all the relevant data
+
     public function run()
     {
         $admin = new User;

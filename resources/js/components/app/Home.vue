@@ -5,23 +5,45 @@
                 <div class="text-h6" color="white">List Images</div>
             </q-card-section>
 
+            <!-- We use a table to show the images and the relevant data -->
+
             <q-markup-table>
                 <thead>
+        
                     <q-tr>
                         <th>Images</th>
                         <th>Description</th>
                         <th>Resolution</th>
-                        <th @click="sort('created_at')">Created At</th>
+                        <th>
+                            
+                        <!-- If we do click on the created_at header, this will sort the images in ASC or DESC -->
+
+                            <q-badge
+                                @click="sort('created_at')"
+                                color="primary"
+                            >
+                                Created At
+                            </q-badge>
+                        </th>
                     </q-tr>
                 </thead>
-                <tbody>
+                <tbody class="tbody">
+                  
+                <!-- We use a v-for to show the images in the body of the table -->
+
+
                     <q-tr v-for="image in sortedImages">
                         <td>
+                            <!-- We use the custom src of every image in the DB -->
+
                             <img
                                 class="img-responsive"
                                 :src="'../images/uploads/' + image.image"
                             />
                         </td>
+
+                                    <!-- We set all the other data in the table body -->
+
 
                         <td>
                             <q-badge color="green">
@@ -34,17 +56,23 @@
                             </q-badge>
                         </td>
                         <td>
-                            <q-badge color="primary">
-                                {{image.created_at }}
+                            <q-badge color="orange">
+                                {{ image.created_at }}
                             </q-badge>
                         </td>
                     </q-tr>
                 </tbody>
             </q-markup-table>
-            <p>
-  <button @click="prevPage">Previous</button> 
-  <button @click="nextPage">Next</button>
-  </p>
+
+                        <!-- We make use of a simple pagination arrows -->
+
+
+            <button class="pagination" @click="prevPage">
+                <q-icon name="arrow_back_ios" />
+            </button>
+            <button class="pagination" @click="nextPage">
+                <q-icon name="arrow_forward_ios" />
+            </button>
         </q-card>
     </div>
 </template>
@@ -58,35 +86,44 @@ export default {
         inputCsfr: Csfr,
     },
 
+    //We set up the data to use
+
     data() {
         return {
             errors: [],
             images: [],
-            currentSort:'created_at',
-    currentSortDir:'desc',
-    pageSize:5,
-    currentPage:1
+            //We setup the pagesize and the current page we are in
+            currentSort: "created_at",
+            currentSortDir: "desc",
+            pageSize: 5,
+            currentPage: 1,
         };
     },
     created() {
-        // Simple GET request using axios
+        // Simple GET request using axios to get all the images entries
         this.getImages();
     },
-    computed:{
-    sortedImages:function() {
-      return this.images.sort((a,b) => {
-        let modifier = 1;
-        if(this.currentSortDir === 'desc') modifier = -1;
-        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-        return 0;
-      }).filter((row, index) => {
-        let start = (this.currentPage-1)*this.pageSize;
-        let end = this.currentPage*this.pageSize;
-        if(index >= start && index < end) return true;
-      });
-    }
-  },
+    computed: {
+
+        //We use a computed property to make the sort in real time
+        sortedImages: function () {
+            return this.images
+                .sort((a, b) => {
+                    let modifier = 1;
+                    if (this.currentSortDir === "desc") modifier = -1;
+                    if (a[this.currentSort] < b[this.currentSort])
+                        return -1 * modifier;
+                    if (a[this.currentSort] > b[this.currentSort])
+                        return 1 * modifier;
+                    return 0;
+                })
+                .filter((row, index) => {
+                    let start = (this.currentPage - 1) * this.pageSize;
+                    let end = this.currentPage * this.pageSize;
+                    if (index >= start && index < end) return true;
+                });
+        },
+    },
     methods: {
         showAlert(type, title, message) {
             Swal.fire({
@@ -96,20 +133,25 @@ export default {
             });
         },
 
-    sort:function(s) {
-      //if s == current sort, reverse
-      if(s === this.currentSort) {
-        this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
-      }
-      this.currentSort = s;
-    },
-    nextPage:function() {
-      if((this.currentPage*this.pageSize) < this.images.length) this.currentPage++;
-    },
-    prevPage:function() {
-      if(this.currentPage > 1) this.currentPage--;
-    },
+        //We use the sort method to get the direction that we want to sort the table to
+        sort: function (s) {
+    
+            if (s === this.currentSort) {
+                this.currentSortDir =
+                    this.currentSortDir === "asc" ? "desc" : "asc";
+            }
+            this.currentSort = s;
+        },
+        //Methods that we use for the pagination arrows
+        nextPage: function () {
+            if (this.currentPage * this.pageSize < this.images.length)
+                this.currentPage++;
+        },
+        prevPage: function () {
+            if (this.currentPage > 1) this.currentPage--;
+        },
 
+        //Method to get all the images entries of the api
 
         getImages: function () {
             axios
@@ -141,10 +183,11 @@ export default {
 </script>
 
 <style scoped>
-.img-responsive{
+
+.img-responsive {
     width: 100%;
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 150px;
+    max-height: 150px;
     margin: auto;
     margin-top: 4%;
     margin-bottom: 4%;
@@ -156,5 +199,13 @@ export default {
     overflow: hidden;
 }
 
-
+.pagination {
+    color: black;
+    display: inline-block;
+    float: left;
+    padding: 8px 16px;
+    align-self: center;
+    justify-self: center;
+    text-decoration: none;
+}
 </style>

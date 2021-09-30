@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+//We separate the routes by named files to avoid mistakes adn enforce a cleaning coding style
 
 Route::group([], __DIR__ . '/auth.php');
 

@@ -1,16 +1,16 @@
 require('./bootstrap');
 
-// Se crean los elementos de Vue
+// We create the vue elements
 
 import { createApp, defineAsyncComponent } from 'vue';
 import { Quasar } from 'quasar'
 import router from './routers/appRouter.js';
 
-// se importan los componentes
+// We import the layout component
 
 import AppLayout from './components/app/AppLayout.vue'
 
-//Se crea la app y se anexan los componentes y plugins
+//We create the app instance and we assign the components and plugins
 
 createApp({
     components : {

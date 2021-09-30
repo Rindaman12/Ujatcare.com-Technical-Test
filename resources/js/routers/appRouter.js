@@ -1,12 +1,9 @@
 // Router
 import { createWebHistory, createRouter } from "vue-router";
 
-//Se crean las rutas para ser usadas con los componentes que seran llamados
+//We created all the routes that the app instance is going to use
 
 const routes = [
-
-
-    //Inicio
 
     {
         path: '/home',

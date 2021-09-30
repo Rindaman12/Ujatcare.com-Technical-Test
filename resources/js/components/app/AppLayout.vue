@@ -1,4 +1,6 @@
 <template>
+    <!-- We create a layout component to house all of the others components and views that we will use -->
+
     <q-layout view="hHh lpR fFf">
         <q-header elevated class="bg-primary text-white" height-hint="98">
             <q-toolbar>
@@ -11,6 +13,7 @@
                     UJATCARE.COM
                 </q-toolbar-title>
 
+                <!-- We assign a toggle for the column where we will put the logout control -->
                 <q-btn
                     dense
                     flat
@@ -20,14 +23,15 @@
                 />
             </q-toolbar>
 
+            <!-- We use the q-tabs as a substitution for vue router instructions -->
+
             <q-tabs align="left">
                 <q-route-tab to="/home" label="Home" replace />
                 <q-route-tab to="/add" label="Add Image" replace />
-
-               
             </q-tabs>
-
         </q-header>
+
+        <!-- If the drawer is open, we show the logout control -->
 
         <q-drawer show-if-above v-model="rightDrawerOpen" side="left" bordered>
             <q-scroll-area
@@ -67,6 +71,8 @@
                 </q-list>
             </q-scroll-area>
 
+            <!-- We also make use of 2 cosmetic images and we show the name of the user currently logged in -->
+
             <q-img
                 class="absolute-top"
                 src="https://cdn.quasar.dev/img/material.png"
@@ -76,12 +82,13 @@
                     <q-avatar size="56px" class="q-mb-sm">
                         <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
                     </q-avatar>
-                    <div class="text-weight-bold">
-                    </div>
+                    <div class="text-weight-bold"></div>
                     <div>@{{ userUsername }}</div>
                 </div>
             </q-img>
         </q-drawer>
+
+        <!-- We created the container for the others vue components -->
 
         <q-page-container>
             <router-view v-slot="{ Component }">
@@ -92,11 +99,12 @@
             <particles-bg color="#014a88" type="square" :bg="true" />
         </q-page-container>
 
-         <q-footer reveal elevated class="footer">
+        <q-footer reveal elevated class="footer">
             <small>
                 <div align="center">
                     <strong
-                        >Copyright &copy; 2021 <a href="/home">UJATCARE</a>.</strong
+                        >Copyright &copy; 2021
+                        <a href="/home">UJATCARE</a>.</strong
                     >
                 </div>
             </small>
@@ -105,6 +113,8 @@
 </template>
 
 <script>
+//We import all the packages we need
+
 import Csfr from "./Csrf";
 import { ref } from "vue";
 import { ParticlesBg } from "particles-bg-vue";
@@ -114,11 +124,13 @@ export default {
         inputCsfr: Csfr,
         ParticlesBg,
     },
+
+    //We use the username as a prop to mention it in the layout
     props: {
         userUsername: {
             type: String,
             required: true,
-        },      
+        },
     },
     data() {
         return {
@@ -139,6 +151,7 @@ export default {
         };
     },
     methods: {
+        //We assign the logout method and we erase all the localstorage tabs
         logout() {
             document.getElementById("logout-form").submit();
             localStorage.tabs = "[]";

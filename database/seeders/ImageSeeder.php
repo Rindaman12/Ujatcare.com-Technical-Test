@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 class ImageSeeder extends Seeder
 {
+    //We create a seeder for the image with all the relevant data
     public function run()
     {
         $image = new Image();

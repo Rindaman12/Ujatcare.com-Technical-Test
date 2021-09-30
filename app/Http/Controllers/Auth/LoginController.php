@@ -44,13 +44,15 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    //This function will logout the user and redirecting him to login
+
     public function logout()
     {
         Session::flush();
         return redirect()->route('login');
     }
 
-    //This function will use the username as a field instead of name
+    //This function will use the username as a field instead of the one for default
 
     public function username()
     {
