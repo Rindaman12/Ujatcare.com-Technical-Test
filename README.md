@@ -118,6 +118,10 @@ https://www.google.com/recaptcha/about/
 
 And replace the current ones in the Login.vue & Register.vue file
 
+6: To use the sorting function make a click on the column "Created At" in the Home View
+
+7: Every page has 5 pictures, to change it go to Home.vue component and change the value of "pageSize"
+
 [Go Back To Title](#title)
 
 ## Authors
