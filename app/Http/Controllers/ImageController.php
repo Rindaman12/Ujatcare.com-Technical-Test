@@ -52,9 +52,15 @@ class ImageController extends Controller
         $image = $request->file('image');
         $filename = time() . '.' . $image->getClientOriginalExtension();
 
-        //if aqui
 
-        ImageIn::make($image)->resize(300, 300)->save(public_path('images/uploads/' . $filename));
+        if ($request->resolution === "200x200") {
+            ImageIn::make($image)->resize(200, 200)->save(public_path('images/uploads/' . $filename));
+        } elseif ($request->resolution === "300x300") {
+            ImageIn::make($image)->resize(300, 300)->save(public_path('images/uploads/' . $filename));
+        } elseif ($request->resolution === "400x400") {
+            ImageIn::make($image)->resize(400, 400)->save(public_path('images/uploads/' . $filename));
+        }
+
         
         $image = Image::create([
             'user_id' => Auth::id(),

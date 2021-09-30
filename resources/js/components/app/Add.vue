@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-md row items-start q-gutter-md">
-        <q-card class="my-card text-white">
+        <q-card class="my-card">
             <q-form
                 @submit.prevent="addImage"
                 @reset="onReset"
@@ -9,7 +9,7 @@
                 <input-csfr />
 
                 <q-card-section class="header">
-                    <div class="text-h6" color="white">Add Image</div>
+                    <div class="text-h6" style="color: white">Add Image</div>
                 </q-card-section>
 
                 <q-card-section class="q-pt-none">
@@ -31,20 +31,29 @@
                 <q-separator inset />
 
                 <q-card-section>
-                    <q-input
-                        filled
-                        v-model="resolution"
-                        name="resolution"
-                        label="Resolution"
-                        hint="Please introduce your resolution."
-                        lazy-rules
-                        bottom-slots
-                        :rules="[
-                            (val) =>
-                                (val && val.length > 0) ||
-                                'Please type something.',
-                        ]"
-                    />
+                    <div class="q-gutter-sm">
+                      <div class="text-h6">Resolution</div>
+
+                        <q-radio
+                            v-model="resolution"
+                            name="resolution"
+                            val="200x200"
+                            label="200x200"
+                            color=""
+                        />
+                        <q-radio
+                            v-model="resolution"
+                            name="resolution"
+                            val="300x300"
+                            label="300x300"
+                        />
+                        <q-radio
+                            v-model="resolution"
+                            name="resolution"
+                            val="400x400"
+                            label="400x400"
+                        />
+                    </div>
                 </q-card-section>
 
                 <q-separator inset />
@@ -101,7 +110,7 @@ export default {
 
     setup() {
         const description = ref(null);
-        const resolution = ref(null);
+        const resolution = ref("200");
         const model = ref(null);
 
         return {
@@ -111,7 +120,6 @@ export default {
 
             onReset() {
                 description.value = null;
-                resolution.value = null;
             },
         };
     },
@@ -136,7 +144,7 @@ export default {
 
         addImage(e) {
             let data = new FormData(e.target);
-            data.append('image', this.image);
+            data.append("image", this.image);
 
             axios
                 .post("/api/images", data)
